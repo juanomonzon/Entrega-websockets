@@ -1,0 +1,43 @@
+<!-- views/realTimeProducts.handlebars -->
+
+<h1>Productos en Tiempo Real</h1>
+
+<ul id="productList">
+  <!-- La lista de productos se mostrará aquí -->
+</ul>
+
+<form id="productForm">
+  <input type="text" id="productName" placeholder="Nombre del producto" />
+  <button type="submit">Agregar Producto</button>
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  // Suscribirse al evento 'actualizarProductos'
+  socket.on('actualizarProductos', (producto) => {
+    // Lógica para agregar el nuevo producto a la lista
+    const productList = document.getElementById('productList');
+    const listItem = document.createElement('li');
+    listItem.textContent = producto.name;
+    productList.appendChild(listItem);
+  });
+
+  // Suscribirse al evento 'eliminarProducto'
+  socket.on('eliminarProducto', (idProducto) => {
+    // Lógica para eliminar el producto de la lista (puedes implementar esto si lo necesitas)
+  });
+
+  // Manejar el envío del formulario
+  document.getElementById('productForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const productName = document.getElementById('productName').value;
+
+    // Emitir evento de WebSocket para crear un producto
+    socket.emit('productoCreado', { name: productName });
+
+    // Limpiar el formulario
+    document.getElementById('productName').value = '';
+  });
+</script>
